@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public AppException handleAllException(Exception ex, WebRequest request) {
-        return new AppException(10000, ex.getLocalizedMessage());
+        return new AppException(10000, ex.getMessage());
     }
 
     @ExceptionHandler(IndexOutOfBoundsException.class)
