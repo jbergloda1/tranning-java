@@ -38,8 +38,7 @@ public class CourseService {
 
     //PUT
     public CoursesEntity updateCourse(CoursesEntity course) {
-        System.out.println("updates");
-        CoursesEntity existing_course = courseRepository.findById(course.getId()).orElse(null);
+        CoursesEntity existing_course = courseRepository.queryEdit(course.getId());
         existing_course.setName(course.getName());
         existing_course.setDescription(course.getDescription());
         existing_course.setStatus(course.getStatus());
