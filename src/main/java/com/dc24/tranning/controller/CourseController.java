@@ -7,35 +7,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = { "http://localhost:3000"})
+@CrossOrigin(origins = { "http://localhost:8080"})
+@RequestMapping("/api/v1/course")
 @RestController
 public class CourseController {
     @Autowired
     private CourseService courseService;
     private final Logger logger = LoggerFactory.getLogger(CourseController.class);
     //POST
-    @PostMapping("/addCourse")
-    public CoursesEntity addCourse(@RequestBody CoursesEntity course) {
+    @PostMapping("/create")
+    public CoursesEntity addCourse(@Valid @RequestBody CoursesEntity course) {
         return courseService.saveCourse(course);
     }
 
-    @PostMapping("/addCourses")
-    public List<CoursesEntity> addCourses(@RequestBody List<CoursesEntity> courses) {
-        return courseService.saveCourses(courses);
-    }
 
     //GET
-    @GetMapping("/courses")
+    @GetMapping("")
     public List<CoursesEntity> getAllCourses() {
         return courseService.getCourses();
     }
-    @GetMapping("/coursesById/{id}")
+    @GetMapping("/{id}")
     public CoursesEntity findCourseById(@PathVariable int id) {
         return courseService.getCourseById(id);
     }
-    @GetMapping("/coursesByName/{name}")
+    @GetMapping("/{name}")
     public CoursesEntity findCourseByName(@PathVariable String name) {
         return courseService.getCourseByName(name);
     }
@@ -45,7 +43,7 @@ public class CourseController {
 //    }
 
     //PUT
-    @PutMapping("/coursesUpdate")
+    @PutMapping("/edit")
     public CoursesEntity updateCourse(@RequestBody CoursesEntity course)
     {
         return courseService.updateCourse(course);
@@ -53,7 +51,7 @@ public class CourseController {
 
 
     //DELETE
-    @DeleteMapping("/coursesDelete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteCourse(@PathVariable int id) {
         return courseService.deleteCourse(id);
     }
