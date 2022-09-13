@@ -2,14 +2,12 @@ package com.dc24.tranning.service;
 
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.NonUniqueResultException;
 
 @Service
 public class UserService {
-    @Autowired
     private UserRepository userRepository;
     public UsersEntity getUser(UsersEntity user) {
         UsersEntity userEntity = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
