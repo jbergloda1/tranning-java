@@ -1,7 +1,10 @@
 package com.dc24.tranning.service;
 
+import com.dc24.tranning.controller.CourseController;
 import com.dc24.tranning.entity.CoursesEntity;
 import com.dc24.tranning.repository.CourseRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +12,8 @@ import java.util.List;
 
 @Service
 public class CourseService {
+    private final Logger logger = LoggerFactory.getLogger(CourseService.class);
+    @Autowired
     private CourseRepository courseRepository;
 
     //POST
@@ -23,6 +28,7 @@ public class CourseService {
 
     //GET
     public List<CoursesEntity> getCourses() {
+        logger.info("mdlasmdlas");
         return courseRepository.findAll();
     }
     public CoursesEntity getCourseById(int id) {
