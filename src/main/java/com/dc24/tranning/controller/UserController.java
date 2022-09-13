@@ -3,18 +3,21 @@ package com.dc24.tranning.controller;
 
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api/v1")
 @CrossOrigin(origins = { "http://localhost:3000"})
+@RequiredArgsConstructor
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     private UsersEntity getCurrentUser(@RequestBody UsersEntity user) {
         return userService.getUser(user);
     }

@@ -1,9 +1,16 @@
 package com.dc24.tranning.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "users", schema = "public", catalog = "postgres")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UsersEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
