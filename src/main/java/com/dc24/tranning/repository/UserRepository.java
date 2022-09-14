@@ -2,11 +2,15 @@ package com.dc24.tranning.repository;
 
 import com.dc24.tranning.entity.UsersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@Repository
-public interface UserRepository extends JpaRepository<UsersEntity, Integer> {
-    UsersEntity findByUsernameAndPassword(String username, String password);
-    UsersEntity findTopByUsername(String username);
-    UsersEntity findTopByPassword(String password);
+import java.util.Optional;
+
+@EnableJpaRepositories
+public interface UserRepository extends JpaRepository<UsersEntity, Long> {
+    Optional<UsersEntity> findByEmail(String email);
+    Optional<UsersEntity> findByUsernameOrEmail(String username, String email);
+    Optional<UsersEntity> findByUsername(String username);
+    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 }
