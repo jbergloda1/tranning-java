@@ -28,7 +28,6 @@ public class CourseService {
 
     //GET
     public List<CoursesEntity> getCourses() {
-        logger.info("mdlasmdlas");
         return courseRepository.findAll();
     }
     public CoursesEntity getCourseById(int id) {
