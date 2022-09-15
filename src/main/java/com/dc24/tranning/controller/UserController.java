@@ -1,21 +1,26 @@
 package com.dc24.tranning.controller;
 
 
-import com.dc24.tranning.dto.LoginDto;
+import com.dc24.tranning.config.JwtTokenUtil;
+import com.dc24.tranning.dto.JwtDto.JwtRequest;
+import com.dc24.tranning.dto.JwtDto.JwtResponse;
 import com.dc24.tranning.dto.SignUpDto;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.RoleRepository;
 import com.dc24.tranning.repository.UserRepository;
+import com.dc24.tranning.service.CustomUserDetailsService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,13 +44,42 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+//    @PostMapping("/login")
+//    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+//    }
+
+    @PostMapping("/login")
+    @Transactional
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(authenticationRequest.getUsername());
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
     }
 
     @PostMapping("/signup")
