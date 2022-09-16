@@ -1,7 +1,7 @@
 package com.dc24.tranning.controller;
 
 
-import com.dc24.tranning.config.JwtTokenUtil;
+import com.dc24.tranning.config.JwtConfig.JwtTokenUtil;
 import com.dc24.tranning.dto.JwtDto.JwtRequest;
 import com.dc24.tranning.dto.JwtDto.JwtResponse;
 import com.dc24.tranning.dto.SignUpDto;

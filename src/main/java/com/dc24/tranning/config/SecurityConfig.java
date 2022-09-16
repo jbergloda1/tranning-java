@@ -1,5 +1,7 @@
 package com.dc24.tranning.config;
 
+import com.dc24.tranning.config.JwtConfig.JwtAuthenticationEntryPoint;
+import com.dc24.tranning.config.JwtConfig.JwtRequestFilter;
 import com.dc24.tranning.service.CustomUserDetailsService;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
