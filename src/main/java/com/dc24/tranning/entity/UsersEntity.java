@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Document(indexName = "usersindex", type = "users")
+@Document(indexName = "usersindex")
 public class UsersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

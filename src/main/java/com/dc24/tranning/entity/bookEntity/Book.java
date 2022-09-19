@@ -3,7 +3,7 @@ package com.dc24.tranning.entity.bookEntity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-@Document(indexName = "nhatlinh", type = "books")
+@Document(indexName = "nhatlinh")
 public class Book {
 
     @Id
