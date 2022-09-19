@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-
 @CrossOrigin(origins = { "http://localhost:8080"})
 @RestController
 @RequestMapping("/api/v1/auth")
