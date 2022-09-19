@@ -1,4 +1,4 @@
-package com.dc24.tranning.config;
+package com.dc24.tranning.config.JwtConfig;
 
 import java.io.IOException;
 

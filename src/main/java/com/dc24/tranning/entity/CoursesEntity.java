@@ -1,5 +1,6 @@
 package com.dc24.tranning.entity;
 
+
 import javax.persistence.*;
 
 @Entity
