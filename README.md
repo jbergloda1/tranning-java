@@ -12,9 +12,9 @@ tranning java
 
 #INSTALL APP
 
-Step 1: Config your database in .env file and copy it to application.properties. Config it at env.local file if you want to run in local
-Step 2: Run "mvn clean install" and run the app
-Step 3: Set up ELK
- - Run "docker-compose up -d" to install Elastic Search and Kibana
- - Run "docker pull docker.elastic.co/logstash/logstash:8.4.1"
- - Run "docker run --rm -it -p 5044:5044 docker.elastic.co/logstash/logstash:8.4.1"
+- Step 1: Config your database in .env file and copy it to application.properties. Config it at env.local file if you want to run in local
+- Step 2: Run "mvn clean install" and run the app
+- Step 3: Set up ELK
+ + Run "docker-compose up -d" to install Elastic Search and Kibana
+ + Run "docker pull docker.elastic.co/logstash/logstash:8.4.1"
+ + Run "docker run --rm -it -p 5044:5044 docker.elastic.co/logstash/logstash:8.4.1"
