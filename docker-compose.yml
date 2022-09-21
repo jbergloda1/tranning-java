@@ -21,6 +21,19 @@ services:
       - elasticsearch
     ports:
       - 5601:5601
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.4.2
+    depends_on:
+      - elasticsearch
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    ports:
+      - 9300:9300
+    volumes:
+      - ./logstash/logstash.conf:/etc/conf.d/logstash.conf:ro
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - es-net
 networks:
   es-net:
     driver: bridge
