@@ -16,5 +16,4 @@ tranning java
 - Step 2: Run "mvn clean install" and run the app
 - Step 3: Set up ELK
  + Run "docker-compose up -d" to install Elastic Search and Kibana
- + Run "docker pull docker.elastic.co/logstash/logstash:8.4.1"
- + Run "docker run --rm -it -p 5044:5044 docker.elastic.co/logstash/logstash:8.4.1"
+ + Run logstash "logstash -f logstash.conf"
