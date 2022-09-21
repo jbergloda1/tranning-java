@@ -30,7 +30,7 @@ public class CourseController {
     //GET
     @GetMapping
     public ResponseEntity<List<CoursesEntity>> getAllCourses() {
-        logger.info("process!!");
+        logger.info("process success!!");
         try {
             logger.info("Course Info");
             List<CoursesEntity> course = courseService.getCourses();
