@@ -33,9 +33,6 @@ public class CourseService {
     public CoursesEntity getCourseById(int id) {
         return courseRepository.findById(id).orElse(null);
     }
-    public CoursesEntity getCourseByName(String name) {
-        return courseRepository.findByName(name);
-    }
 //    public List<CoursesEntity> getCoursesForUser(String username) {
 //        return courseRepository.findAllByUsername(username);
 //    }
