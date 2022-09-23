@@ -1,15 +1,23 @@
 package com.dc24.tranning.entity.bookEntity;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+
+import javax.persistence.*;
 
 @Document(indexName = "nhatlinh")
 public class Book {
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
     private String id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "author")
     private String author;
+
+    @Column(name = "release_date")
     private String releaseDate;
 
     public Book() {
