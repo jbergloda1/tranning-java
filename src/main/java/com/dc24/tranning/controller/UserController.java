@@ -88,4 +88,10 @@ public class UserController {
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
 
     }
+
+    @PutMapping("/edit")
+    public UsersEntity updateCourse(@RequestBody UsersEntity user)
+    {
+        return userDetailsService.updateUser(user);
+    }
 }
