@@ -1,5 +1,6 @@
 package com.dc24.tranning.service;
 
+import com.dc24.tranning.entity.CoursesEntity;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.UserRepository;
@@ -35,6 +36,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
     public List<UsersEntity> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public UsersEntity updateUser(UsersEntity user) {
+        UsersEntity existing_user = userRepository.queryEdit(user.getId());
+        existing_user.setEmail(user.getEmail());
+        existing_user.setUsername(user.getUsername());
+        return userRepository.save(existing_user);
     }
 
 
