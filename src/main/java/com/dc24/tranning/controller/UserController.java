@@ -5,12 +5,16 @@ import com.dc24.tranning.config.JwtConfig.JwtTokenUtil;
 import com.dc24.tranning.dto.JwtDto.JwtRequest;
 import com.dc24.tranning.dto.JwtDto.JwtResponse;
 import com.dc24.tranning.dto.SignUpDto;
+import com.dc24.tranning.entity.CoursesEntity;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.RoleRepository;
 import com.dc24.tranning.repository.UserRepository;
 import com.dc24.tranning.service.CustomUserDetailsService;
+import org.apache.coyote.Response;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +27,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
+
 @CrossOrigin(origins = { "http://localhost:8080"})
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -46,25 +52,19 @@ public class UserController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
-
-        final String token = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(token));
-    }
-    private void authenticate(String username, String password) throws Exception {
+    @GetMapping
+    public ResponseEntity<List<UsersEntity>> getAllCourses() {
+        logger.info("process success!!");
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            logger.info("User Info");
+            List<UsersEntity> user = userDetailsService.getAllUsers();
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        catch (Exception e){
+            logger.error("error");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
