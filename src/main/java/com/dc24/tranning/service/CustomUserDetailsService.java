@@ -38,11 +38,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public UsersEntity getUserById(int id) {
+        return userRepository.findUserById(id);
+    }
+
     public UsersEntity updateUser(UsersEntity user) {
-        UsersEntity existing_user = userRepository.queryEdit(user.getId());
+        UsersEntity existing_user = userRepository.findUserById(user.getId());
         existing_user.setEmail(user.getEmail());
         existing_user.setUsername(user.getUsername());
         return userRepository.save(existing_user);
+    }
+
+    public String deleteUser(int id) {
+        userRepository.deleteById(id);
+        return " removed user " + id  + " completed";
     }
 
 

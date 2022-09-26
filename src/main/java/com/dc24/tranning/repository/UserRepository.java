@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 @EnableJpaRepositories
-public interface UserRepository extends JpaRepository<UsersEntity, Long> {
+public interface UserRepository extends JpaRepository<UsersEntity, Integer> {
     Optional<UsersEntity> findByEmail(String email);
     Optional<UsersEntity> findByUsernameOrEmail(String username, String email);
     Optional<UsersEntity> findByUsername(String username);
@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<UsersEntity, Long> {
     Boolean existsByEmail(String email);
 
     @Query(value = "select * from users u where u.id = :id", nativeQuery = true)
-    UsersEntity queryEdit(@Param("id") Integer id);
+    UsersEntity findUserById(@Param("id") Integer id);
 
 }
