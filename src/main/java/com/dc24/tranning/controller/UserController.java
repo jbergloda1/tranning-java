@@ -55,7 +55,7 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public ResponseEntity<List<UsersEntity>> getAllCourses() {
+    public ResponseEntity<List<UsersEntity>> getAllUsers() {
         logger.info("process success!!");
         try {
             logger.info("User Info");
@@ -66,6 +66,11 @@ public class UserController {
             logger.error("error");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/{id}")
+    public UsersEntity findUserById(@PathVariable int id) {
+        return userDetailsService.getUserById(id);
     }
 
     @PostMapping("/signup")
@@ -80,7 +85,7 @@ public class UserController {
         user.setUsername(signUpDto.getUsername());
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        RolesEntity roles = roleRepository.findByName("ROLE_ADMIN").get();
+        RolesEntity roles = roleRepository.findByName("ROLE_SUBSCRIBER").get();
         user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
@@ -90,8 +95,13 @@ public class UserController {
     }
 
     @PutMapping("/edit")
-    public UsersEntity updateCourse(@RequestBody UsersEntity user)
+    public UsersEntity updateUser(@RequestBody UsersEntity user)
     {
         return userDetailsService.updateUser(user);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteUser(@PathVariable int id) {
+        return userDetailsService.deleteUser(id);
     }
 }
