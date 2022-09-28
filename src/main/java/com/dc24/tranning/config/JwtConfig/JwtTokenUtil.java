@@ -1,17 +1,22 @@
 package com.dc24.tranning.config.JwtConfig;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
+import com.dc24.tranning.entity.RolesEntity;
+import com.dc24.tranning.entity.UsersEntity;
+import com.dc24.tranning.repository.UserRepository;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenUtil implements Serializable {
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final long serialVersionUID = -2550185165626007488L;
 
@@ -23,6 +28,7 @@ public class JwtTokenUtil implements Serializable {
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
+
 
     //retrieve expiration date from jwt token
     public Date getExpirationDateFromToken(String token) {
@@ -47,6 +53,12 @@ public class JwtTokenUtil implements Serializable {
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        Set<String> userRoles = new HashSet<>();
+        Optional<UsersEntity> user = userRepository.findByUsername(userDetails.getUsername());
+        for(RolesEntity role:user.get().getRoles()){
+            userRoles.add(role.getName());
+        }
+        claims.put("Roles", userRoles.toArray());
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

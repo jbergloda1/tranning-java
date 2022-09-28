@@ -1,9 +1,10 @@
 package com.dc24.tranning.service;
 
-import com.dc24.tranning.entity.CoursesEntity;
+import com.dc24.tranning.dto.UserDTO.UserDTO;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
+
+    private static ModelMapper modelMapper = new ModelMapper();
 
 
     public CustomUserDetailsService(UserRepository userRepository) {

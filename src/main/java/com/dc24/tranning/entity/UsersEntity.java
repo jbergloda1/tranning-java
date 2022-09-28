@@ -1,9 +1,6 @@
 package com.dc24.tranning.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -15,6 +12,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 @Document(indexName = "usersindex")
@@ -42,7 +41,7 @@ public class UsersEntity {
     public void User() {
     }
 
-    public void User(Integer id, String username, String email) {
+    public void UserResponses(Integer id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
