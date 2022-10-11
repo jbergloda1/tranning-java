@@ -28,16 +28,16 @@ public class ForgotPasswordController {
     private CustomUserDetailsService customUserDetailsService;
 
     @GetMapping("/reset_password")
-    public String showResetPasswordForm(@Param(value = "token") String token, Model model) {
+    public ResponseEntity<?> showResetPasswordForm(@Param(value = "token") String token, Model model) {
         UsersEntity user = customUserDetailsService.getByResetPasswordToken(token);
         model.addAttribute("token", token);
 
         if (user == null) {
             model.addAttribute("message", "Invalid Token");
-            return "message";
+            return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.BAD_REQUEST);
         }
 
-        return "reset_password_form";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/forgot_password")
@@ -54,27 +54,29 @@ public class ForgotPasswordController {
 
         } catch (UsernameNotFoundException ex) {
             model.addAttribute("error", ex.getMessage());
+            return new ResponseEntity<>(model.getAttribute("error"), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (UnsupportedEncodingException | MessagingException e) {
             model.addAttribute("error", "Error while sending email");
+            return new ResponseEntity<>(model.getAttribute("error"), HttpStatus.BAD_GATEWAY);
         }
 
         return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.OK);
     }
     @PostMapping("/reset_password")
-    public String processResetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO, HttpServletRequest request, Model model) {
+    public ResponseEntity<?> processResetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO, HttpServletRequest request, Model model) {
         UsersEntity token = customUserDetailsService.getByResetPasswordToken(resetPasswordDTO.getToken());
         String password = resetPasswordDTO.getPassword();
         model.addAttribute("title", "Reset your password");
 
         if (token == null) {
             model.addAttribute("message", "Invalid Token");
-            return "message";
+            return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.BAD_REQUEST);
         } else {
             customUserDetailsService.updatePassword(token, password);
             model.addAttribute("message", "You have successfully changed your password.");
         }
 
-        return "message";
+        return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.OK);
     }
 
 }
