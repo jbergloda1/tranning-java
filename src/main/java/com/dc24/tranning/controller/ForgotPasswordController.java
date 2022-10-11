@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 @CrossOrigin(origins = { "http://localhost:8080"})
 @RestController
@@ -60,19 +61,25 @@ public class ForgotPasswordController {
             return new ResponseEntity<>(model.getAttribute("error"), HttpStatus.BAD_GATEWAY);
         }
 
-        return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
     @PostMapping("/reset_password")
     public ResponseEntity<?> processResetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO, HttpServletRequest request, Model model) {
         UsersEntity token = customUserDetailsService.getByResetPasswordToken(resetPasswordDTO.getToken());
-        String password = resetPasswordDTO.getPassword();
+        String createPassword = resetPasswordDTO.getCreatePassword();
+        String confirmPassword = resetPasswordDTO.getConfirmPassword();
         model.addAttribute("title", "Reset your password");
+
+        if(!(Arrays.equals(createPassword.toCharArray(), confirmPassword.toCharArray()))){
+            model.addAttribute("message", "Passwords do not match.");
+            return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.BAD_REQUEST);
+        }
 
         if (token == null) {
             model.addAttribute("message", "Invalid Token");
             return new ResponseEntity<>(model.getAttribute("message"), HttpStatus.BAD_REQUEST);
         } else {
-            customUserDetailsService.updatePassword(token, password);
+            customUserDetailsService.updatePassword(token, resetPasswordDTO.getCreatePassword());
             model.addAttribute("message", "You have successfully changed your password.");
         }
 
