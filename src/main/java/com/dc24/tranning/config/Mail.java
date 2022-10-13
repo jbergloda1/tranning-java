@@ -11,6 +11,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.dc24.tranning.constant.MailConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -20,22 +21,13 @@ public class Mail {
 
     @Autowired
     private JavaMailSender mailSender;
-    private final String PORT = "587";
-    private final String HOST = "smtp.mailtrap.io";
-    private final String USERNAME = "a48385f1f308d4";
-    private final String PASSWORD = "60349a3ee49c87";
-    private final String EMAIL = "a48385f1f308d4-60349a3ee49c87@inbox.mailtrap.io";
-
-    private final boolean AUTH = true;
-    private final boolean STARTTLS = true;
-
 
     public void sendEmail(String recipientEmail, String link)
             throws MessagingException, UnsupportedEncodingException {
         Message msg = new MimeMessage(setSession(setProperties()));
         msg.setSentDate(new Date());
         msg.setSubject("Here's the link to reset your password");
-        msg.setFrom(new InternetAddress(EMAIL, false));
+        msg.setFrom(new InternetAddress(MailConstant.Project_EMAIL, false));
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
 
         msg.setContent(
@@ -55,7 +47,7 @@ public class Mail {
     private Session setSession(Properties props) {
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(USERNAME, PASSWORD);
+                return new PasswordAuthentication(MailConstant.MY_EMAIL, MailConstant.MY_PASSWORD);
             }
         });
         return session;
@@ -64,10 +56,10 @@ public class Mail {
     private Properties setProperties() {
         Properties props = new Properties();
 
-        props.put("mail.smtp.port", PORT);
-        props.put("mail.smtp.host", HOST);
-        props.put("mail.smtp.auth", AUTH);
-        props.put("mail.smtp.starttls.enable", STARTTLS);
+        props.put("mail.smtp.port", MailConstant.PORT);
+        props.put("mail.smtp.host", MailConstant.HOST);
+        props.put("mail.smtp.auth", MailConstant.AUTH);
+        props.put("mail.smtp.starttls.enable", MailConstant.STARTTLS);
 
         return props;
     }
