@@ -102,9 +102,29 @@ public class UserController {
         }
         catch (Exception e){
             logger.error("error");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//    @PostMapping("/signupRole")
+//    public ResponseEntity<?> registerRole(@NotNull @RequestBody RolesEntity rolesEntity){
+//        logger.info("logging process register");
+//        try {
+//
+//            if(userRepository.existsByUsername(rolesEntity.getName())){
+//                return new ResponseEntity<>("Roles is already taken!", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            RolesEntity role = new RolesEntity();
+//            role.setName("ROLE_SUBSCRIBER");
+//            roleRepository.save(role);
+//
+//            return new ResponseEntity<>("Role registered successfully", HttpStatus.OK);
+//        }
+//        catch (Exception e){
+//            logger.error("error");
+//            return new ResponseEntity<>(e.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @PutMapping("/edit")
     public ResponseEntity<?> updateUser(@RequestBody UsersEntity user)
