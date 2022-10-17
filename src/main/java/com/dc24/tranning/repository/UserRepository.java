@@ -25,4 +25,11 @@ public interface UserRepository extends JpaRepository<UsersEntity, Integer> {
 
     UsersEntity findByResetPasswordToken(String token);
 
+    @Query(value = "select * from users u where u.verification_code = ?1", nativeQuery = true)
+    UsersEntity findByVerificationCode(String code);
+
+    @Query(value  = "select * from users u where u.username = :username", nativeQuery = true)
+    UsersEntity checkEnabled(@Param("username") String username);
+
+
 }

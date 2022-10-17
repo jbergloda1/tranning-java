@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -45,7 +46,6 @@ public class ForgotPasswordController {
     public ResponseEntity<?> processForgotPassword(HttpServletRequest request, @RequestBody ForgotPasswordDTO emailDTO, Model model) {
         String email = emailDTO.getEmail();
         String token = RandomString.make(30);
-
         try {
             customUserDetailsService.updateResetPasswordToken(token, email);
             String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;

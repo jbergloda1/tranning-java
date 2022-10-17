@@ -13,4 +13,5 @@ public class MailConstant {
 
     public static final boolean STARTTLS = true;
 
+
 }

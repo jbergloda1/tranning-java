@@ -11,7 +11,6 @@ import java.util.Set;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -30,18 +29,34 @@ public class UsersEntity {
     @Length(min = 5, message = "*Your email must have at least 5 characters")
     @NotEmpty(message = "*Please provide a email")
     private String email;
+
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
     @NotEmpty(message = "*Please provide your password")
     private String password;
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RolesEntity> roles;
+
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
-    public void User() {
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    public UsersEntity() {
+
     }
+
+
+    public void User() {
+
+    }
+
 
     public void UserResponses(Integer id, String username, String email) {
         this.id = id;

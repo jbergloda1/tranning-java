@@ -1,24 +1,26 @@
 package com.dc24.tranning.service;
 
-import com.dc24.tranning.dto.UserDTO.UserDTO;
-import com.dc24.tranning.entity.PasswordResetToken;
+import com.dc24.tranning.config.Mail;
+
+import com.dc24.tranning.dto.SignUpDto;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
 import com.dc24.tranning.repository.UserRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.mail.SimpleMailMessage;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,10 +29,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
 
+    private UsersEntity user;
 
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -40,6 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
+
     public List<UsersEntity> getAllUsers() {
         return userRepository.findAll();
     }
@@ -50,6 +55,32 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UsersEntity getUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
+    }
+
+    public void sendVerificationEmail(UsersEntity user, String siteURL)
+            throws MessagingException, UnsupportedEncodingException {
+        String toAddress = user.getEmail();
+        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+        Mail mailer = new Mail();
+        mailer.sendEmail(toAddress, verifyURL);
+    }
+    public String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
+    public boolean verifyRegister(String verificationCode) {
+        UsersEntity user = userRepository.findByVerificationCode(verificationCode);
+
+        if (user == null || user.getEnabled()) {
+            return false;
+        } else {
+            user.setVerificationCode(null);
+            user.setEnabled(true);
+            userRepository.save(user);
+            return true;
+        }
+
     }
 
     public UsersEntity updateUser(UsersEntity user) {
