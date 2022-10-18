@@ -43,14 +43,13 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/forgot_password")
-    public ResponseEntity<?> processForgotPassword(HttpServletRequest request, @RequestBody ForgotPasswordDTO emailDTO, Model model) {
-        String email = emailDTO.getEmail();
+    public ResponseEntity<?> processForgotPassword(HttpServletRequest request, @RequestParam(name = "email") String email, Model model) {
         String token = RandomString.make(30);
         try {
             customUserDetailsService.updateResetPasswordToken(token, email);
             String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
             Mail mailer = new Mail();
-            mailer.sendEmail(email, resetPasswordLink);
+            mailer.sendEmail("Here's the link to reset your password", email, resetPasswordLink);
             model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
         } catch (UsernameNotFoundException ex) {

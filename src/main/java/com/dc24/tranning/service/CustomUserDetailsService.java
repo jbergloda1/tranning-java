@@ -62,7 +62,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         String toAddress = user.getEmail();
         String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
         Mail mailer = new Mail();
-        mailer.sendEmail(toAddress, verifyURL);
+        mailer.sendEmail("Here's the link to verify your account", toAddress, verifyURL);
     }
     public String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
