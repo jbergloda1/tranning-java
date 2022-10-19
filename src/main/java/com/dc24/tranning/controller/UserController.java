@@ -144,16 +144,33 @@ public class UserController {
 //    }
 
     @PutMapping("/edit")
-    public ResponseEntity<?> updateUser(@RequestBody UsersEntity user)
+    public ResponseEntity<List<UserDTO>> updateUser(@RequestBody UserDTO userRequest)
     {
         logger.info("logging process update");
         try {
             logger.info("update user info");
-            return new ResponseEntity<>(userDetailsService.updateUser(user), HttpStatus.OK);
+            List<UsersEntity> user = userDetailsService.updateUserInfo(userRequest);
+            List<UserDTO> userDtoList = mergeList(user, UserDTO.class);
+            return new ResponseEntity<>(userDtoList, HttpStatus.OK);
         }
         catch (Exception e) {
             logger.error("error");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/edit-info")
+    public ResponseEntity<List<UserDTO>> updateUserInfo(@RequestBody UserDTO userRequest){
+        logger.info("logging process update user info");
+        try {
+            logger.info("update user info");
+            List<UsersEntity> user = userDetailsService.updateUserInfo(userRequest);
+            List<UserDTO> userDtoList = mergeList(user, UserDTO.class);
+            return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+        }
+        catch (Exception e){
+            logger.error("error");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")

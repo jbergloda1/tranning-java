@@ -2,11 +2,12 @@ package com.dc24.tranning.service;
 
 import com.dc24.tranning.config.Mail;
 
-import com.dc24.tranning.dto.SignUpDto;
+import com.dc24.tranning.dto.UserDTO.UserDTO;
 import com.dc24.tranning.entity.RolesEntity;
 import com.dc24.tranning.entity.UsersEntity;
+import com.dc24.tranning.repository.RoleRepository;
 import com.dc24.tranning.repository.UserRepository;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,9 +28,11 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private UserRepository userRepository;
 
-    private UsersEntity user;
 
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -83,11 +86,33 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     }
 
-    public UsersEntity updateUser(UsersEntity user) {
+    public UsersEntity updateUser(UserDTO user) {
         UsersEntity existing_user = userRepository.findUserById(user.getId());
-        existing_user.setEmail(user.getEmail());
         existing_user.setUsername(user.getUsername());
+        existing_user.setEmail(user.getEmail());
+        existing_user.setName(user.getName());
+        RolesEntity roles = roleRepository.findByName("ROLE_SUBSCRIBER").get();
+        existing_user.setRoles(Collections.singleton(roles));
+        existing_user.setCompany(user.getCompany());
+
         return userRepository.save(existing_user);
+    }
+
+    public List<UsersEntity> updateUserInfo(UserDTO user){
+        UsersEntity existing_user = userRepository.findUserById(user.getId());
+        existing_user.setIntroduction(user.getIntroduction());
+        existing_user.setBirthday(user.getBirthday());
+        existing_user.setPhone(user.getPhone());
+        existing_user.setCountry(user.getCountry());
+        existing_user.setLanguage(user.getLanguage());
+        existing_user.setGender(user.getGender());
+        existing_user.setWebsite(user.getWebsite());
+        existing_user.setName(user.getName());
+        existing_user.setCompany(user.getCompany());
+        RolesEntity roles = roleRepository.findByName("ROLE_SUBSCRIBER").get();
+        existing_user.setRoles(Collections.singleton(roles));
+
+        return Collections.singletonList(userRepository.save(existing_user));
     }
 
     public String deleteUser(int id) {
